@@ -16,7 +16,9 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017/growi?replicaSet=rs0
       - ELASTICSEARCH_URI=http://elasticsearch:9200/growi
+      - ELASTICSEARCH_MAX_BODY_LENGTH_TO_INDEX=20000000
       - BULK_EXPORT_PDF_CONVERTER_URI=http://pdf-converter:3010
+      - DRAWIO_URI=http://localhost:8081/?offline=1&https=0
       - PASSWORD_SEED=changeme   # CHANGE THIS before first boot, then leave it untouched
       - FILE_UPLOAD=local        # store attachments on local disk (fully on-premise, no S3/GCS)
       # - MATHJAX=1              # activate this line if you want to use MathJax
@@ -99,6 +101,12 @@ services:
     restart: unless-stopped
     volumes:
       - page_bulk_export_tmp:/tmp/page-bulk-export
+
+  drawio:
+    image: jgraph/drawio:latest
+    ports:
+      - 8081:8080
+    restart: unless-stopped
 
 volumes:
   growi_data:
